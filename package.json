@@ -1,0 +1,23 @@
+{
+  "name": "oap-argv",
+  "version": "0.1.0",
+  "description": "A modern command line argument parser",
+  "main": "argv.mjs",
+  "type": "module",
+  "scripts": {
+    "prepare": "tsc",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "node --test *.spec.mjs",
+    "release": "standard-version"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.34",
+    "standard-version": "^9.5.0",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
+  }
+}

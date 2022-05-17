@@ -1,0 +1,7 @@
+*.mts
+!*.d.mts
+*.spec.*
+.nvmrc
+*.tgz
+.editorconfig
+tsconfig.json
