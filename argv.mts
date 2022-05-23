@@ -1,35 +1,47 @@
-import type { ArgvOptionSchema } from "./argv-option-schema.mjs"
+export { optionSchema } from "./argv-option-schema.mjs";
+import type { OptionSchema, OptionSchemaType } from "./argv-option-schema.mjs"
+
+const isRecord = (value: any): value is Record<string, any> => value && typeof value === 'object' && !Array.isArray(value)
+const hasProperty = <T extends string>(object: Record<any, any>, property: T): object is Record<T, any> => object.hasOwnProperty(property)
+const isConstructor = (value: any): value is new (...args: any[]) => any => typeof value === 'function' && isRecord(value.prototype) && value.prototype.constructor === value
 
 
-function matchOption(schemaOptions: ArgvOptionSchema[], command: string, commands: IterableIterator<string>): { optionSchema: ArgvOptionSchema, value: string | boolean } | null {
-  for (const optionSchema of schemaOptions) {
-    if (optionSchema.type === "boolean") {
-      for (const flag of optionSchema.flags) {
-        if (command.startsWith(`${flag}`)) {
-          return {
-            optionSchema,
-            value: true
-          }
-        }
+type Schema = Record<string, OptionSchema<any>>
+
+
+function matchOption<T extends Schema>(schemaOptions: T, arg: string, nextArg: () => string): { optionName: string, value: OptionSchemaType<any> } | null {
+  for (const [optionName, optionSchema] of Object.entries(schemaOptions)) {
+    const toValue = (getValue: () => string) => {
+      const typeIsRecord = isRecord(optionSchema.type);
+      if (typeIsRecord && hasProperty(optionSchema.type, 'parseLiteralArg')) {
+        return optionSchema.type.parseLiteralArg;
       }
+
+      if (typeIsRecord && hasProperty(optionSchema.type, 'parseArg')) {
+        return optionSchema.type.parseArg(getValue());
+      }
+
+      if (typeIsRecord && hasProperty(optionSchema.type, 'parse')) {
+        return optionSchema.type.parse(getValue());
+      }
+
+      if (isConstructor(optionSchema.type)) {
+        return new optionSchema.type(getValue());
+      }
+
+      throw new Error(`Unsupported type: ${optionSchema.type}`,);
     }
-
-    if (optionSchema.type === "string" || optionSchema.type === "string[]") {
-      const toValue = (value?: string) => {
-        return value ?? ''
-      }
-      for (const flag of optionSchema.flags) {
-        if (command.startsWith(`${flag}=`)) {
-          return {
-            optionSchema,
-            value: toValue(command.substring(flag.length + 1)),
-          }
+    for (const flag of optionSchema.flags) {
+      if (arg.startsWith(`${flag}=`)) {
+        return {
+          optionName,
+          value: toValue(() => arg.substring(flag.length + 1)),
         }
-        if (command.startsWith(`${flag}`)) {
-          return {
-            optionSchema,
-            value: toValue(commands.next().value),
-          }
+      }
+      if (arg.startsWith(`${flag}`)) {
+        return {
+          optionName,
+          value: toValue(() => nextArg()),
         }
       }
     }
@@ -39,33 +51,49 @@ function matchOption(schemaOptions: ArgvOptionSchema[], command: string, command
 }
 
 
-export function parse(argv: string[] = process.argv.splice(2), schemaOptions: ArgvOptionSchema[]) {
-  const indexSplitArgv = argv.findIndex(arg => arg === '--');
+export type OptionsTypeOf<T extends Schema> = { [P in keyof T]?: OptionSchemaType<T[P]> }
+
+export interface ParseOptions {
+  splitSymbol?: string | false
+}
+
+export function parse<T extends Schema>(
+  argv: string[] = process.argv.splice(2),
+  schemaOptions?: T,
+  parseOptions?: ParseOptions,
+): {
+  commands: string[],
+  options: OptionsTypeOf<T>,
+  restArgv: string[],
+} {
+  const splitSymbol = parseOptions?.splitSymbol ?? '--';
+  const indexSplitArgv = argv.findIndex(arg => arg === splitSymbol);
   const posSpitArgv = indexSplitArgv !== -1 ? indexSplitArgv : argv.length;
   const pureArgv = [...argv].splice(0, posSpitArgv);
-  const moreArgv = [...argv].splice(posSpitArgv);
+  const restArgv = [...argv].splice(posSpitArgv);
+  const iteratorArgv = pureArgv.values();
 
   const commands: string[] = []
-  const options: Record<string, string[] | string | boolean> = {};
+  const options: Record<string, any> = {};
 
-  const iteratorPureArgv = pureArgv.values();
 
-  for (const i of iteratorPureArgv) {
-    if (i.startsWith('-')) {
-      const optionMatched = matchOption(schemaOptions, i, iteratorPureArgv)
+  for (const arg of iteratorArgv) {
+    const nextArg = () => iteratorArgv.next().value ?? '';
+    if (arg.startsWith('-') && schemaOptions) {
+      const optionMatched = matchOption(schemaOptions, arg, nextArg)
       if (optionMatched) {
-        if (optionMatched.optionSchema.type === "string[]" && typeof optionMatched.value === "string") {
-          const preValue = options[optionMatched.optionSchema.name];
+        if (Array.isArray(optionMatched.value)) {
+          const preValue = options[optionMatched.optionName];
           const preValueArr = Array.isArray(preValue) ? preValue : [];
-          options[optionMatched.optionSchema.name] = [...preValueArr, optionMatched.value]
+          options[optionMatched.optionName] = [...preValueArr, ...optionMatched.value]
           continue
         }
-        options[optionMatched.optionSchema.name] = optionMatched.value
+        options[optionMatched.optionName] = optionMatched.value
         continue
       }
     }
-    commands.push(i)
+    commands.push(arg)
   }
 
-  return { commands, options, moreArgv }
+  return { commands, options, restArgv }
 }

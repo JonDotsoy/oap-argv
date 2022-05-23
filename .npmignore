@@ -1,7 +1,9 @@
 *.mts
 !*.d.mts
-*.spec.*
+*.test.*
 .nvmrc
 *.tgz
 .editorconfig
 tsconfig.json
+.snap
+nodemon.json
