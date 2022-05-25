@@ -1,5 +1,5 @@
-export { optionSchema } from "./argv-option-schema.js";
-import type { OptionSchema, OptionSchemaType } from "./argv-option-schema.js"
+export { optionSchema } from "./argv-option-schema";
+import type { OptionSchema, OptionSchemaType } from "./argv-option-schema"
 
 const isRecord = (value: any): value is Record<string, any> => value && typeof value === 'object' && !Array.isArray(value)
 const hasProperty = <T extends string>(object: Record<any, any>, property: T): object is Record<T, any> => object.hasOwnProperty(property)
@@ -58,7 +58,7 @@ export interface ParseOptions {
 }
 
 export function parse<T extends Schema>(
-  argv: string[] = process.argv.splice(2),
+  argv: string[],
   schemaOptions?: T,
   parseOptions?: ParseOptions,
 ): {
