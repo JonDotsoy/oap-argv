@@ -1,15 +1,15 @@
 {
   "name": "oap-argv",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A modern command line argument parser",
-  "main": "argv.js",
+  "main": "cjs/argv.js",
   "engines": {
     "node": ">=18.2.0"
   },
   "scripts": {
-    "prepare": "tsc",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
+    "prepare": "npm run build",
+    "build": "rollup --config rollup.config.ts --configPlugin typescript",
+    "build:watch": "npm run build -- --watch",
     "test": "node --test *.spec.mjs",
     "clean": "tsc --build --clean",
     "release": "standard-version"
@@ -18,7 +18,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.2",
     "@types/node": "^17.0.35",
+    "rollup": "^2.74.1",
     "standard-version": "^9.5.0",
     "ts-node": "^10.7.0",
     "types-node-test": "^1.0.2",
