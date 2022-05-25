@@ -1,5 +1,3 @@
-*.mts
-!*.d.mts
 *.test.*
 .nvmrc
 *.tgz
@@ -7,3 +5,4 @@
 tsconfig.json
 .snap
 nodemon.json
+env.d.ts

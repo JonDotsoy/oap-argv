@@ -1,5 +1,5 @@
-import { optionSchema } from "../argv.mjs"
-import { CliManager, createCliSchema } from "./cli-manager.mjs";
+import { optionSchema } from "../argv"
+import { CliManager, createCliSchema } from "./cli-manager";
 import test from "node:test";
 import asserts from "node:assert"
 import { createWriteStream } from "node:fs";

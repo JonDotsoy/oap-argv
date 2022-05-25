@@ -1,6 +1,6 @@
-*.mjs
-*.mjs.map
-*.d.mts
+*.js
+*.js.map
+*.d.ts
 !.nvmrc
 !.npmignore
 !.editorconfig

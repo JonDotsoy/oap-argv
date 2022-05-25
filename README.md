@@ -3,6 +3,31 @@
 A modern command line argument parser.
 
 
+```ts
+const schema = {
+  a: optionSchema(Boolean, ["-a"]),
+  d: optionSchema(Array, ["-d"]),
+};
+
+const { commands, options } = parse(["-a", "-d=e1", "-d", "e2"], schema)
+
+assert.deepEqual(commands, [])
+assert.deepEqual(options, { a: true, d: [ "e1", "e2" ] })
+```
+
+**Features:**
+
+- Zero dependencies module
+- Module typed
+- Deno compatible
+
+
+## Guides
+
+
+
+
+
 **Sample**
 
 ```ts

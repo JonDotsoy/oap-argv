@@ -1,4 +1,4 @@
-import { parse, optionSchema } from "./argv.mjs"
+import { parse, optionSchema } from "./argv"
 import assert from "node:assert";
 import test from 'node:test';
 
