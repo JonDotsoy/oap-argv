@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { AsyncLocalStorage } from "node:async_hooks"
-import { OptionSchema } from "../argv-option-schema"
-import { parse, ParseOptions } from "../argv"
+import { OptionSchema } from "./argv-option-schema"
+import { parse, ParseOptions } from "./argv"
 
 export interface CliSchema {
   parseOptions?: ParseOptions

@@ -6,3 +6,4 @@ tsconfig.json
 .snap
 nodemon.json
 env.d.ts
+rollup.config.ts

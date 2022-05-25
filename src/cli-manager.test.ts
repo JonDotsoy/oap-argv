@@ -1,4 +1,4 @@
-import { optionSchema } from "../argv"
+import { optionSchema } from "./argv"
 import { CliManager, createCliSchema } from "./cli-manager";
 import test from "node:test";
 import asserts from "node:assert"
