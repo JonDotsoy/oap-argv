@@ -4,3 +4,5 @@
 !.nvmrc
 !.npmignore
 !.editorconfig
+cjs/
+esm/
