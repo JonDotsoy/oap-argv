@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { AsyncLocalStorage } from "node:async_hooks"
-import { OptionSchema } from "./argv-option-schema.js"
-import { parse, ParseOptions } from "./argv.js"
+import { OptionSchema } from "./argv-option-schema"
+import { parse, ParseOptions } from "./argv"
 
 export interface CliSchema {
   parseOptions?: ParseOptions
@@ -34,7 +34,7 @@ function generateHelpMessage(schema: CliSchema) {
   if (schema.options) {
     helpMessage.push(`Options:\n`);
     for (const [, [optionDescription = '', optionSchema]] of Object.entries(schema.options)) {
-      const flags = optionSchema.flags.sort((a, b) => a > b ? 1 : -1).join(', ').padEnd(20, ' ');
+      const flags = optionSchema.flags.sort((a: string, b: string) => a > b ? 1 : -1).join(', ').padEnd(20, ' ');
       helpMessage.push(`  ${flags} ${optionDescription}\n`);
     }
     helpMessage.push(`\n`);
