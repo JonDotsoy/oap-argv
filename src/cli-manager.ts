@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { AsyncLocalStorage } from "node:async_hooks"
+// import { AsyncLocalStorage } from "node:async_hooks"
 import { OptionSchema } from "./argv-option-schema"
 import { parse, ParseOptions } from "./argv"
 
@@ -98,21 +98,21 @@ export class CliManager {
     const option = this.options;
     const loadHandler = await this.schema?.loadHandler?.();
 
-    return CliManager.CliManagerContext.run([args, option], async () => {
-      if (typeof loadHandler?.handler === 'function') {
-        return loadHandler.handler(this.schema, args, option)
-      }
+    // return CliManager.CliManagerContext.run([args, option], async () => {
+    if (typeof loadHandler?.handler === 'function') {
+      return loadHandler.handler(this.schema, args, option)
+    }
 
-      if (typeof loadHandler?.default === 'function') {
-        return loadHandler.default(this.schema, args, option)
-      }
+    if (typeof loadHandler?.default === 'function') {
+      return loadHandler.default(this.schema, args, option)
+    }
 
-      console.error(`${chalk.red('error:')} Command not found: ${this.schema?.arg0 ?? 'cli'} ${args.join(' ')}\n`);
-      console.log(this.help());
+    console.error(`${chalk.red('error:')} Command not found: ${this.schema?.arg0 ?? 'cli'} ${args.join(' ')}\n`);
+    console.log(this.help());
 
-      return 127
-    })
+    return 127
+    // })
   }
 
-  static CliManagerContext = new AsyncLocalStorage<[string[], Record<string, any>]>();
+  // static CliManagerContext = new AsyncLocalStorage<[string[], Record<string, any>]>();
 }
