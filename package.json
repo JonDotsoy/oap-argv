@@ -14,7 +14,14 @@
     "clean": "tsc --build --clean",
     "release": "standard-version"
   },
-  "keywords": [],
+  "keywords": [
+    "args-parser",
+    "argv",
+    "command-line",
+    "cli",
+    "command-line-args",
+    "command-line-parser"
+  ],
   "author": "Jonathan Delgado <hi@jon.soy> (https://jon.soy)",
   "license": "ISC",
   "devDependencies": {
