@@ -47,7 +47,7 @@ In Deno:
 
 
 ```ts
-import { parse, optionSchema } from 'https://cdn.skypack.dev/oap-argv@0.1.8-3/esm/argv.js?dts';
-import { CliManager } from 'https://cdn.skypack.dev/oap-argv@0.1.8-3/esm/cli-manager.js?dts';
+import { parse, optionSchema } from 'https://cdn.skypack.dev/oap-argv/esm/argv.js?dts';
+import { CliManager } from 'https://cdn.skypack.dev/oap-argv/esm/cli-manager.js?dts';
 ```
 
