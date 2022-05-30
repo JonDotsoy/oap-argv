@@ -1,6 +1,6 @@
 {
   "name": "oap-argv",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A modern command line argument parser",
   "main": "esm/argv.js",
   "type": "module",
