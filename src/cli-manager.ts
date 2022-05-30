@@ -1,5 +1,3 @@
-import chalk from "chalk";
-// import { AsyncLocalStorage } from "node:async_hooks"
 import { OptionSchema } from "./argv-option-schema"
 import { parse, ParseOptions } from "./argv"
 
@@ -107,7 +105,7 @@ export class CliManager {
       return loadHandler.default(this.schema, args, option)
     }
 
-    console.error(`${chalk.red('error:')} Command not found: ${this.schema?.arg0 ?? 'cli'} ${args.join(' ')}\n`);
+    console.error(`${red('error:')} Command not found: ${this.schema?.arg0 ?? 'cli'} ${args.join(' ')}\n`);
     console.log(this.help());
 
     return 127
@@ -115,4 +113,8 @@ export class CliManager {
   }
 
   // static CliManagerContext = new AsyncLocalStorage<[string[], Record<string, any>]>();
+}
+
+function red(str: string) {
+  return str;
 }

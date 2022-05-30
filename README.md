@@ -18,45 +18,36 @@ assert.deepEqual(options, { a: true, d: [ "e1", "e2" ] })
 **Features:**
 
 - Zero dependencies module
-- Module typed
 - Deno compatible
+- Command handler manager
 
 
-## Guides
+## Installation
 
+Using NPM:
 
+```shell
+npm i oap-argv
+```
 
-
-
-**Sample**
+In Node.JS:
 
 ```ts
-// My App
-#!/usr/bin/env node
-
-import {parse} from "oap-argv";
-import {ActionControl} from "oap-argv/help/action";
-
-const actionControl = new ActionControl()
-
-actionControl.useAction("command", async (command:string, otherCommands:string[], options:Record<string,string|string[]|boolean>) => {
-  console.log(`My command`)
-  return 0;
-});
-
-const {commands, options, moreArgv} = parse(process.argv.splice(2));
-const [command,...otherCommands] = commands;
-
-process.exit(await actionControl.getAction(command, otherCommands, options));
+import { parse, optionSchema } from "oap-argv"
+import { CliManager } from "oap-argv/esm/cli-manager.js"
 ```
 
+> For versions of NodeJS that do not support ECMAScript modules.
+> ```ts
+> const { parse, optionSchema } = require( "oap-argv/cjs/argv.js")
+> const { CliManager } = require("oap-argv/cjs/cli-manager.js")
+> ```
 
+In Deno:
+
+
+```ts
+import { parse, optionSchema } from 'https://cdn.skypack.dev/oap-argv@0.1.8-3/esm/argv.js?dts';
+import { CliManager } from 'https://cdn.skypack.dev/oap-argv@0.1.8-3/esm/cli-manager.js?dts';
 ```
-my-cli command --flag value -- other-command --flag=234
-[ 1  ] [ 2                ] [ 3                       ]
 
-
-1) Part of command cli
-2) Part of the commands and arguments
-3) Used to read literal arguments
-```
